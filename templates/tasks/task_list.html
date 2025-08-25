@@ -1,12 +1,49 @@
 {% extends 'base.html' %}
 {% block content %}
     <h1>Task List</h1>
-    <a href="{% url 'tasks:task-create' %}">Створити завдання</a>
+    <a href="{% url 'tasks:task-create' %}">Create task</a>
+    <br>
+    <form method="get" class="mb-4">
+    <label for="sort">Sort by:</label>
+    <select name="sort" id="sort" onchange="this.form.submit()">
+        <option value="">---</option>
+        <option value="created_at" {% if request.GET.sort == "created_at" %}selected{% endif %}>
+        Create date
+        </option>
+        <option value="due_date" {% if request.GET.sort == "due_date" %}selected{% endif %}>
+        Deadline
+        </option>
+        <option value="priority" {% if request.GET.sort == "priority" %}selected{% endif %}>
+        Priority
+        </option>
+    </select>
+    </form>
+    <form method="get">
+        {{ form.status.label_tag }}
+        {{ form.status }}
+        {{ form.priority.label_tag }}
+        {{ form.priority }}
+        <button type="submit">Filter</button>
+    </form>
     <ul>
-        {% for task in tasks %}
-            <li>
-                <a href="{% url 'tasks:task-detail' task.id %}">{{ task.title }}</a> - {{ task.status }}
-            </li>
+        <li>
+            {% for task in tasks %}
+                <div>
+                    <a href="{% url 'tasks:task-detail' task.id %}">{{ task.title }}</a> - {{ task.get_priority_display }}
+                </div>
+                <div>
+                    <form action="{% url 'tasks:task-status-update' task.pk %}" method="post">
+                        {% csrf_token %}
+                        <select name="status" onchange="this.form.submit()">
+                            {% for value, label in task.STATUS_CHOICES %}
+                                <option value="{{ value }}" {% if task.status == value %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </div>
+        </li>
+        {% empty %}
+            <li>No tasks available.</li>
         {% endfor %}
     </ul>
 {% endblock %}
