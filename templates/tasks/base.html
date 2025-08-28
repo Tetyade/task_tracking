@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Tracker</title>
+
+</head>
+<body>
+    <nav>
+        <ul class="navbar-buttons">
+            <li><a href="{% url 'tasks:task-list' %}">Home</a></li>
+            {% if user.is_authenticated %}
+                <li><span class="username"><a href="{% url 'my-profile' %}">{{ user.username }}</a></span></li>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-button">Вийти</button>
+                </form>
+            {% else %}
+                <li><a href="{% url 'login' %}">Login</a></li>
+                <li><a href="{% url 'register' %}">Sign up</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

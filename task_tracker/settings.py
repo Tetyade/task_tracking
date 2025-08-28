@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'tasks', 
+    'auth_system',
 ]
 
 MIDDLEWARE = [
@@ -129,4 +130,10 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_URL = '/admin/login/'
+AUTH_USER_MODEL = 'auth_system.CustomUser'
+# LOGIN_URL = '/admin/login/'
+
+# EMAIL BACKEND 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = "noreply@yourapp.com"
+

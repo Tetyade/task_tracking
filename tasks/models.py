@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.conf import settings
 
 class Task(models.Model):
     STATUS_CHOICES = [
@@ -12,7 +12,7 @@ class Task(models.Model):
         (2, '!!'),
         (3, '!'),]
     
-    creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name='tasks')
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='tasks')
     title = models.CharField(max_length=200)
     description = models.TextField(blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='todo')
