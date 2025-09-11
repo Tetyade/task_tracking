@@ -3,12 +3,12 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Аутентифікація{% endblock %}</title>
+    <title>{% block title %}Authentication{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body class="auth-page">
     <div class="form-container">
-        <h2>{% block header %}Авторизація{% endblock %}</h2>
+        <h2>{% block header %}Authorization{% endblock %}</h2>
 
         {% if messages %}
             <ul class="messages">
@@ -21,4 +21,114 @@
         {% block form_block %}{% endblock %}
     </div>
 </body>
+<style>
+    /* Загальний фон */
+    .auth-page {
+        background-color: #121212;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+        color: #e0e0e0;
+    }
+
+    /* Контейнер форми */
+    .form-container {
+        background-color: #1e1e1e;
+        padding: 40px;
+        border-radius: 12px;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        text-align: center;
+    }
+
+    /* Заголовок */
+    .form-container h2 {
+        margin-bottom: 25px;
+        font-size: 1.6rem;
+        color: #ffffff;
+    }
+
+    /* Повідомлення (успіх/помилка) */
+    .messages {
+        list-style: none;
+        padding: 0;
+        margin-bottom: 20px;
+    }
+
+    .messages li {
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+    }
+
+    .messages li.error {
+        background-color: rgba(220, 53, 69, 0.2);
+        border: 1px solid #dc3545;
+        color: #f28b8b;
+    }
+
+    .messages li.success {
+        background-color: rgba(40, 167, 69, 0.2);
+        border: 1px solid #28a745;
+        color: #9be29b;
+    }
+
+    /* Поля введення */
+    .form-container input,
+    .form-container select {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border-radius: 8px;
+        border: 1px solid #444;
+        background-color: #2a2a2a;
+        color: #e0e0e0;
+        font-size: 1rem;
+        transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .form-container input:focus,
+    .form-container select:focus {
+        border-color: #666;
+        background-color: #333;
+        outline: none;
+    }
+
+    /* Кнопка */
+    .form-container button {
+        width: 100%;
+        padding: 12px;
+        background-color: #2a2a2a;
+        border: 1px solid #444;
+        border-radius: 8px;
+        color: #e0e0e0;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    .form-container button:hover {
+        background-color: #383838;
+    }
+
+    /* Лінки */
+    .form-container a {
+        display: inline-block;
+        margin-top: 10px;
+        color: #aaa;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color 0.2s ease;
+    }
+
+    .form-container a:hover {
+        color: #fff;
+    }
+
+</style>
 </html>

@@ -1,14 +1,15 @@
 {% extends "auth_system/base.html" %}
 
-{% block title %}Вхід{% endblock %}
+{% block title %}Sign In{% endblock %}
 
-{% block header %}Вхід до системи{% endblock %}
+{% block header %}Sign In{% endblock %}
 
 {% block form_block %}
-    <form method="post" action="{% url 'login' %}">
+    <form method="post" action="{% url 'auth_system:login' %}">
         {% csrf_token %}
+        
         <div class="form-group">
-            <label for="{{ form.username.id_for_label }}">Ім’я користувача:</label>
+            <label for="{{ form.username.id_for_label }}">Username:</label>
             {{ form.username }}
             {% if form.username.errors %}
             <div class="form-error">{{ form.username.errors.0 }}</div>
@@ -16,17 +17,85 @@
         </div>
 
         <div class="form-group">
-            <label for="{{ form.password.id_for_label }}">Пароль:</label>
+            <label for="{{ form.password.id_for_label }}">Password:</label>
             {{ form.password }}
-            {% if form.password1.errors %}
+            {% if form.password.errors %}
             <div class="form-error">{{ form.password.errors.0 }}</div>
             {% endif %}
         </div>
-    {% comment %} <form method="post" action="{% url 'login' %}">
-        {% csrf_token %}
-        <div class="form-fields">
-            {{ form.as_p }}
-        </div>{% endcomment %}
-        <button type="submit" class="register-btn">Увійти</button> 
+        <p class="form-note" style="text-align: right; margin-top: -35px; margin-bottom: 30px;;">
+            <a href="{% url 'auth_system:password_reset' %}">Forgot a password?</a>
+        </p>
+        <button type="submit" class="submit-btn">Submit</button>
     </form>
+
+    <p class="form-note">
+        Don`t have a profile? <a href="{% url 'auth_system:register' %}">Sign Up</a>
+    </p>
+
+<style>
+    .form-group {
+        margin-bottom: 20px; /* відстань між полями */
+        text-align: left; /* label вирівнюється зліва */
+    }
+
+    /* Label над полем */
+    .form-group label {
+        display: block;
+        margin-bottom: 6px; /* відступ між label і input */
+        font-size: 1.05rem; /* трохи більший шрифт */
+        font-weight: 500;
+        color: #c0c0c0;
+    }
+
+    /* Поля введення (input, textarea, select) */
+    .form-container input,
+    .form-container select,
+    .form-container textarea {
+        box-sizing: border-box; /* щоб padding враховувався */
+        width: 100%;
+        padding: 12px 14px; /* трохи більше для комфорту */
+        border-radius: 8px;
+        border: 1px solid #444;
+        background-color: #2a2a2a;
+        color: #e0e0e0;
+        font-size: 1rem; /* більший шрифт для введення */
+        transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .form-container input:focus,
+    .form-container select:focus,
+    .form-container textarea:focus {
+        border-color: #666;
+        background-color: #333;
+        outline: none;
+    }
+
+    /* Помилки під полями */
+    .form-error {
+        margin-top: 5px;
+        font-size: 0.85rem;
+        color: #ff6b6b;
+        text-align: left;
+    }
+
+    /* Нотатка під формою */
+    .form-note {
+        margin-top: 15px;
+        font-size: 0.9rem;
+        color: #aaa;
+    }
+
+    .form-note a {
+        color: #ddd;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .form-note a:hover {
+        color: #fff;
+    }
+
+</style>
+
 {% endblock %}

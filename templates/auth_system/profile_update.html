@@ -5,41 +5,111 @@
 {% block header %}Update Profile{% endblock %}
 
 {% block form_block %}
-<form method="post">
-    {% csrf_token %}
+    {% if form.errors %}
+        <div class="debug-errors">
+            {{ form.errors }}
+        </div>
+    {% endif %}
 
-    <div class="form-group">
-        <label for="{{ form.first_name.id_for_label }}">First name:</label>
-        {{ form.first_name }}
-        {% if form.first_name.errors %}
-            <div class="form-error">{{ form.first_name.errors.0 }}</div>
-        {% endif %}
-    </div>
+    <form method="post" action="{% url 'auth_system:my-profile-edit' %}">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.first_name.id_for_label }}">First name:</label>
+            {{ form.first_name }}
+            {% if form.first_name.errors %}
+                <div class="form-error">{{ form.first_name.errors.0 }}</div>
+            {% endif %}
+        </div>
 
-    <div class="form-group">
-        <label for="{{ form.last_name.id_for_label }}">Last name:</label>
-        {{ form.last_name }}
-        {% if form.last_name.errors %}
-            <div class="form-error">{{ form.last_name.errors.0 }}</div>
-        {% endif %}
-    </div>
+        <div class="form-group">
+            <label for="{{ form.last_name.id_for_label }}">Last name:</label>
+            {{ form.last_name }}
+            {% if form.last_name.errors %}
+                <div class="form-error">{{ form.last_name.errors.0 }}</div>
+            {% endif %}
+        </div>
 
-    <div class="form-group">
-        <label for="{{ form.username.id_for_label }}">Username:</label>
-        {{ form.username }}
-        {% if form.username.errors %}
-            <div class="form-error">{{ form.username.errors.0 }}</div>
-        {% endif %}
-    </div>
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">Username:</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+                <div class="form-error">{{ form.username.errors.0 }}</div>
+            {% endif %}
+        </div>
 
-    <div class="form-group">
-        <label for="{{ form.email.id_for_label }}">Email:</label>
-        {{ form.email }}
-        {% if form.email.errors %}
-            <div class="form-error">{{ form.email.errors.0 }}</div>
-        {% endif %}
-    </div>
+        <div class="form-group">
+            <label for="{{ form.email.id_for_label }}">Email:</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+                <div class="form-error">{{ form.email.errors.0 }}</div>
+            {% endif %}
+        </div>
 
-    <button type="submit" class="btn">Save changes</button>
-</form>
+        <button type="submit" class="submit-btn">Save changes</button>
+    </form>
+
+    <p class="form-note">
+        <a href="{% url 'auth_system:my-profile' %}">Back to profile</a>
+    </p>
+
+<style>
+    .form-group {
+        margin-bottom: 20px;
+        text-align: left;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 1.05rem;
+        font-weight: 500;
+        color: #c0c0c0;
+    }
+
+    .form-container input,
+    .form-container select,
+    .form-container textarea {
+        box-sizing: border-box;
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 8px;
+        border: 1px solid #444;
+        background-color: #2a2a2a;
+        color: #e0e0e0;
+        font-size: 1rem;
+        transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .form-container input:focus,
+    .form-container select:focus,
+    .form-container textarea:focus {
+        border-color: #666;
+        background-color: #333;
+        outline: none;
+    }
+
+    .form-error {
+        margin-top: 5px;
+        font-size: 0.85rem;
+        color: #ff6b6b;
+        text-align: left;
+    }
+
+    .form-note {
+        margin-top: 15px;
+        font-size: 0.9rem;
+        color: #aaa;
+    }
+
+    .form-note a {
+        color: #ddd;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .form-note a:hover {
+        color: #fff;
+    }
+</style>
 {% endblock %}

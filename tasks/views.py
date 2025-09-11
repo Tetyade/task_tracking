@@ -65,6 +65,16 @@ class TaskDetailView(DetailView):
     model = models.Task
     context_object_name = 'task'
     template_name = 'tasks/task_detail.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        comments = self.object.comments.all().order_by('-created_at')  # новіші коментарі зверху
+
+        # Тут додаємо властивість current_user для шаблону
+        for comment in comments:
+            comment.current_user = self.request.user
+
+        context['comments'] = comments
+        return context
 
 class TaskCreateView(LoginRequiredMixin, CreateView):
     model = models.Task

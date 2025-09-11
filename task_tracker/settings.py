@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'tasks', 
     'auth_system',
+    'comments',
+    'notifications',
 ]
 
 MIDDLEWARE = [

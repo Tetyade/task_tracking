@@ -2,7 +2,7 @@
 
 {% block title %}Registration{% endblock %}
 
-{% block header %}Registration{% endblock %}
+{% block header %}Registation{% endblock %}
 
 {% block form_block %}
     {% if form.errors %}
@@ -11,9 +11,10 @@
         </div>
     {% endif %}
 
-    <form method="post" action="{% url 'register' %}">
+    <form method="post" action="{% url 'auth_system:register' %}">
         {% csrf_token %}
-        <div>
+        
+        <div class="form-group">
             <label for="{{form.first_name.id_for_label}}">First name:</label>
             {{ form.first_name }}
             {% if form.first_name.errors %}
@@ -61,12 +62,76 @@
             {% endif %}
         </div>
 
-        <button type="submit">Sign up</button>
-        {% comment %} <div class="form-fields">
-            {{ form.as_p }}
-        </div>
-        <button type="submit" class="register-btn">Sign up</button> {% endcomment %}
+        <button type="submit" class="submit-btn">Submit</button>
     </form>
+
+    <p class="form-note">
+        Already have a profile? <a href="{% url 'auth_system:login' %}">Sign In</a>
+    </p>
+<style>
+/* Контейнер для полів */
+    .form-group {
+        margin-bottom: 20px; /* відстань між полями */
+        text-align: left; /* label вирівнюється зліва */
+    }
+
+    /* Label над полем */
+    .form-group label {
+        display: block;
+        margin-bottom: 6px; /* відступ між label і input */
+        font-size: 1.05rem; /* трохи більший шрифт */
+        font-weight: 500;
+        color: #c0c0c0;
+    }
+
+    /* Поля введення (input, textarea, select) */
+    .form-container input,
+    .form-container select,
+    .form-container textarea {
+        box-sizing: border-box; /* щоб padding враховувався */
+        width: 100%;
+        padding: 12px 14px; /* трохи більше для комфорту */
+        border-radius: 8px;
+        border: 1px solid #444;
+        background-color: #2a2a2a;
+        color: #e0e0e0;
+        font-size: 1rem; /* більший шрифт для введення */
+        transition: border-color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .form-container input:focus,
+    .form-container select:focus,
+    .form-container textarea:focus {
+        border-color: #666;
+        background-color: #333;
+        outline: none;
+    }
+
+    .form-error {
+        margin-top: 5px;
+        font-size: 0.85rem;
+        color: #ff6b6b;
+        text-align: left;
+    }
+
+    /* Нотатка під формою */
+    .form-note {
+        margin-top: 15px;
+        font-size: 0.9rem;
+        color: #aaa;
+    }
+
+    .form-note a {
+        color: #ddd;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .form-note a:hover {
+        color: #fff;
+    }
+
+</style>
 {% endblock %}
 
         

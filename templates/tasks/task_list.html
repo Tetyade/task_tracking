@@ -1,53 +1,271 @@
 {% extends 'tasks/base.html' %}
 {% block content %}
-    <h1>Task List</h1>
+<div class="container">
+    <h1 class="page-title">TASK LIST</h1>
+
     {% if user.is_authenticated %}
-        <a href="{% url 'tasks:task-create' %}">Create task</a>
-        <br>
-        <form method="get" class="mb-4">
-        <label for="sort">Sort by:</label>
-        <select name="sort" id="sort" onchange="this.form.submit()">
-            <option value="">---</option>
-            <option value="created_at" {% if request.GET.sort == "created_at" %}selected{% endif %}>
-            Create date
-            </option>
-            <option value="due_date" {% if request.GET.sort == "due_date" %}selected{% endif %}>
-            Deadline
-            </option>
-            <option value="priority" {% if request.GET.sort == "priority" %}selected{% endif %}>
-            Priority
-            </option>
-        </select>
-        </form>
-        <form method="get">
+    <div class="actions-top">
+        <a href="{% url 'tasks:task-create' %}" class="btn-dark">Create Task</a>
+
+        <form method="get" class="filter-form">
+            <label for="sort">Sort by:</label>
+            <select name="sort" id="sort" onchange="this.form.submit()">
+                <option value="">---</option>
+                <option value="created_at" {% if request.GET.sort == "created_at" %}selected{% endif %}>Create date</option>
+                <option value="due_date" {% if request.GET.sort == "due_date" %}selected{% endif %}>Deadline</option>
+                <option value="priority" {% if request.GET.sort == "priority" %}selected{% endif %}>Priority</option>
+            </select>
+
             {{ form.status.label_tag }}
             {{ form.status }}
             {{ form.priority.label_tag }}
             {{ form.priority }}
-            <button type="submit">Filter</button>
+            <button type="submit" class="btn-dark">Filter</button>
         </form>
-        <ul>
-            <li>
-                {% for task in tasks %}
-                    <div>
-                        <a href="{% url 'tasks:task-detail' task.id %}">{{ task.title }}</a> - {{ task.get_priority_display }}
-                    </div>
-                    <div>
-                        <form action="{% url 'tasks:task-status-update' task.pk %}" method="post">
-                            {% csrf_token %}
-                            <select name="status" onchange="this.form.submit()">
-                                {% for value, label in task.STATUS_CHOICES %}
-                                    <option value="{{ value }}" {% if task.status == value %}selected{% endif %}>{{ label }}</option>
-                                {% endfor %}
-                            </select>
-                        </form>
-                    </div>
-            </li>
-            {% empty %}
-                <li>No tasks available.</li>
-            {% endfor %}
-        </ul>
+    </div>
+
+    <ul class="task-list">
+        {% for task in tasks %}
+        <li class="task-card fade-in">
+            <div class="task-info">
+                <div class="task-left">
+                    <a href="{% url 'tasks:task-detail' task.id %}" class="task-title">{{ task.title|upper }}</a>
+                    <span class="task-priority">{{ task.get_priority_display }}</span>
+                </div>
+                <form action="{% url 'tasks:task-status-update' task.pk %}" method="post" class="status-form">
+                    {% csrf_token %}
+                    <select name="status" onchange="this.form.submit()">
+                        {% for value, label in task.STATUS_CHOICES %}
+                        <option value="{{ value }}" {% if task.status == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+        </li>
+        {% empty %}
+        <li>No tasks available.</li>
+        {% endfor %}
+    </ul>
+
+    <!-- Пагінація -->
+    <div class="pagination">
+        {% if tasks.has_previous %}
+            <a href="?page={{ tasks.previous_page_number }}">« Previous</a>
+        {% endif %}
+        <span>Page {{ tasks.number }} of {{ tasks.paginator.num_pages }}</span>
+        {% if tasks.has_next %}
+            <a href="?page={{ tasks.next_page_number }}">Next »</a>
+        {% endif %}
+    </div>
+
     {% else %}
-        <p>Please <a href="{% url 'auth:login' %}">log in</a> or <a href="{% url 'auth:register' %}">sign up</a> to view your tasks.</p>
+    <p>Please <a href="{% url 'auth_system:login' %}">log in</a> or <a href="{% url 'auth_system:register' %}">sign up</a> to view your tasks.</p>
     {% endif %}
+</div>
+
+<style>
+/* === Основні стилі сторінки === */
+body {
+    background-color: #121212;
+    color: #e0e0e0;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.page-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+/* === Кнопки === */
+.btn-dark {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #1f1f1f;
+    color: #e0e0e0;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    margin-right: 10px;
+    transition: background-color 0.2s;
+}
+
+.btn-dark:hover {
+    background-color: #333333;
+}
+
+/* === Форма фільтрів === */
+.filter-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.filter-form select {
+    padding: 6px 10px;
+    border-radius: 6px;
+    background-color: #1f1f1f;
+    color: #e0e0e0;
+    border: 1px solid #333;
+    outline: none;
+}
+
+.filter-form button {
+    padding: 6px 12px;
+    border-radius: 6px;
+    background-color: #1f1f1f;
+    color: #e0e0e0;
+    border: none;
+    cursor: pointer;
+}
+
+.filter-form button:hover {
+    background-color: #333;
+}
+
+/* === Список завдань === */
+ .task-list {
+    /* background-color: #333; */
+    list-style: none;
+    padding: 0;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+/* 
+.task-card {
+    background-color: #1e1e1e;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.task-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.task-priority {
+    font-size: 0.9rem;
+    background-color: #333;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+}
+.status-form select {
+    padding: 6px 10px;
+    border-radius: 6px;
+    background-color: #121212;
+    color: #e0e0e0;
+    border: 1px solid #333;
+    outline: none;
+} */
+.task-card {
+    /* list-style: none; */
+    padding: 0;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.task-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* розставляє по краям */
+}
+
+.task-left {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* відстань між назвою і priority */
+}
+
+.task-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.task-priority {
+    font-size: 0.9rem;
+    background-color: #333;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.status-form select {
+    padding: 6px 10px;
+    border-radius: 6px;
+    background-color: #121212;
+    color: #e0e0e0;
+    border: 1px solid #333;
+    outline: none;
+}
+
+/* === Пагінація === */
+.pagination {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.pagination a {
+    color: #e0e0e0;
+    text-decoration: none;
+    padding: 6px 12px;
+    background-color: #1f1f1f;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+
+.pagination a:hover {
+    background-color: #333;
+}
+
+/* === Анімація появи === */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting){
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+});
+</script>
 {% endblock %}
